@@ -31,7 +31,18 @@ function parseFolders(app, dir, routePath = '/') {
         setupTemplate(dir, routePath);
         break;
       default:
-        parseFolders(app, dir, `${routePath}${item}/`);
+        if (fs.lstatSync(path.join(dir, routePath, item)).isDirectory() ) {
+          parseFolders(app, dir, `${routePath}${item}/`);
+        } else {
+          app.get(routePath + item, (req, res) => {
+            res.sendFile(path.join(dir, routePath, item))
+          });
+          console.log(
+            clc.cyanBright('[HELIUM] ') +
+              'Created a static file accessible by route: ' +
+              clc.yellow(routePath + item)
+          );
+        }
         break;
     }
   });
