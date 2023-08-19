@@ -11,7 +11,7 @@ const createStaticRoutes = (app, dirname) => {
   parseFolders(app, viewsFolder);
 };
 
-function parseFolders(app, dir, routePath = '/') {
+const parseFolders = (app, dir, routePath = '/') => {
   const readingDir = fs.readdirSync(path.join(dir, routePath));
 
   readingDir.forEach((item) => {
