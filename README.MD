@@ -20,7 +20,7 @@ Helium is aimed at creating simple and easy-to-use web applications
 
 Download and unzip `helium-create-app`, this repository acts as the framework structure
 
-Since Helium is not currently available as an npm package, you can download it to your device and connect it to **helium-create-app** as a directory link via ```npm link %path_to_helium%```.
+Since Helium is not currently available as an npm package, you can download it to your device and connect it to [**helium-create-app**](https://github.com/ShizzaHo/helium-create-app) as a directory link via ```npm link %path_to_helium%```.
 
 After that type ```npm install``` to install the dependencies, do this in both the **Helium** kernel and **helium-create-app**
 
