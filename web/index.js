@@ -1,14 +1,14 @@
-const clc = require("cli-color");
-const express = require('express');
-const { createStaticRoutes } = require('./lib/createStaticRoutes');
-const app = express()
-const path = require('path');
-const { createApiRoutes } = require("./lib/createApiRoutes");
+import clc from 'cli-color';
+import express from 'express';
+import path from 'path';
+import createStaticRoutes from './lib/createStaticRoutes/index.js';
+import createApiRoutes from './lib/createApiRoutes/index.js';
+const app = express();
 
-const startApp = (port, dirname, callbacks) => {
+export const startApp = (port, dirname, callbacks) => {
     app.listen(port, () => {
         console.log(clc.cyanBright("[HELIUM] ") + `Launching the Helium application`);
-        app.use(express.static(path.join(dirname, "public")));
+        app.use('/public', express.static(dirname + '/public'));
         createStaticRoutes(app, dirname);
         createApiRoutes(app, dirname);
         console.log(clc.cyanBright("[HELIUM] ") + `Helium application is up and running and available at: ${clc.yellow(`http://localhost:${port}`)}`);
@@ -16,8 +16,4 @@ const startApp = (port, dirname, callbacks) => {
             callbacks();
         }
     })
-}
-
-module.exports = {
-    startApp: startApp,
 }

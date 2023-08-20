@@ -1,7 +1,7 @@
-const clc = require('cli-color');
-const fs = require('fs');
-const path = require('path');
-const { formattingRoute, setupTemplate } = require('../routeFormatter');
+import clc from 'cli-color';
+import fs from 'fs'; 
+import path from 'path';
+import { pathToFileURL } from 'url';
 
 const createApiRoutes = (app, dirname) => {
   const apiFolder = path.join(dirname, 'api');
@@ -33,16 +33,16 @@ const parseFolders = (app, dir, routePath = '/') => {
   });
 };
 
-const createApi = (app, dir, routePath = '/') => {
-  const {type, action} = require(path.join(dir, routePath, "index.js"));
+const createApi = async (app, dir, routePath = '/') => {
+  const apiRoute = await import(pathToFileURL(path.join(dir, routePath, "index.js")));
 
-  if (type == "GET") {
+  if (apiRoute.default.type == "GET") {
     app.get("/api" + routePath, (req, res) => {
-      action(req, res);
+      apiRoute.default.action(req, res);
     });
-  } else if (type == "POST") {
+  } else if (apiRoute.default.type == "POST") {
     app.post("/api" + routePath, (req, res) => {
-      action(req, res);
+      apiRoute.default.action(req, res);
     });
   } else {
     console.log(
@@ -54,6 +54,4 @@ const createApi = (app, dir, routePath = '/') => {
   }
 };
 
-module.exports = {
-  createApiRoutes: createApiRoutes,
-};
+export default createApiRoutes;

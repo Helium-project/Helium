@@ -1,10 +1,10 @@
-const clc = require('cli-color');
-const fs = require('fs');
-const path = require('path');
+import clc from 'cli-color';
+import fs from 'fs'; 
+import path from 'path';
 
 let templateSource = '';
 
-const formattingRoute = (dir, routePath) => {
+export const formattingRoute = (dir, routePath) => {
   const indexFilePath = path.join(dir, routePath, 'index.html');
   const fileSource = fs.readFileSync(indexFilePath);
   const fileSourceText = Buffer.from(fileSource).toString();
@@ -45,13 +45,8 @@ const formattingRoute = (dir, routePath) => {
   return Buffer.from(pageContent);
 };
 
-const setupTemplate = (dir, routePath) => {
+export const setupTemplate = (dir, routePath) => {
   const templateFilePath = path.join(dir, routePath, 'template.html');
   const fileSource = fs.readFileSync(templateFilePath);
   templateSource = Buffer.from(fileSource).toString();
-};
-
-module.exports = {
-  formattingRoute: formattingRoute,
-  setupTemplate: setupTemplate,
 };

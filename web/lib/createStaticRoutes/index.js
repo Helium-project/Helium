@@ -1,7 +1,7 @@
-const clc = require('cli-color');
-const fs = require('fs');
-const path = require('path');
-const { formattingRoute, setupTemplate } = require('../routeFormatter');
+import clc from 'cli-color';
+import fs from 'fs'; 
+import path from 'path';
+import { formattingRoute, setupTemplate } from '../routeFormatter/index.js';
 
 const createStaticRoutes = (app, dirname) => {
   const viewsFolder = path.join(dirname, 'views');
@@ -48,6 +48,4 @@ const parseFolders = (app, dir, routePath = '/') => {
   });
 }
 
-module.exports = {
-  createStaticRoutes: createStaticRoutes,
-};
+export default createStaticRoutes;
