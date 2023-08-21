@@ -54,7 +54,7 @@ This template also contains two special keys, which are necessary for content ge
 
 The absence of a key is allowed, but you will receive a warning message in the console about the absence of the key.
 
-![Template](./docs/Template.png "Template")
+![Template](./docs/template.png "Template")
 
 **index.html** will act as a start page that will be called by route: **/** (for example: http://localhost:3000/)
 
