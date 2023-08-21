@@ -3,15 +3,15 @@ import fs from 'fs';
 import path from 'path';
 import { formattingRoute, setupTemplate } from '../routeFormatter/index.js';
 
-const createStaticRoutes = (app, dirname) => {
+const createStaticRoutes = (app, dirname, options = {}) => {
   const viewsFolder = path.join(dirname, 'views');
   console.log(
     clc.cyanBright('[HELIUM] ') + clc.bgBlackBright('Creating static routers')
   );
-  parseFolders(app, viewsFolder);
+  parseFolders(app, viewsFolder, options);
 };
 
-const parseFolders = (app, dir, routePath = '/') => {
+const parseFolders = (app, dir, options, routePath = '/') => {
   const readingDir = fs.readdirSync(path.join(dir, routePath));
 
   readingDir.forEach((item) => {
@@ -19,7 +19,7 @@ const parseFolders = (app, dir, routePath = '/') => {
       case 'index.html':
         app.get(routePath, (req, res) => {
           res.set('Content-Type', 'text/html')
-          res.send(formattingRoute(dir, routePath))
+          res.send(formattingRoute(dir, routePath, options))
         });
         console.log(
           clc.cyanBright('[HELIUM] ') +
@@ -32,7 +32,7 @@ const parseFolders = (app, dir, routePath = '/') => {
         break;
       default:
         if (fs.lstatSync(path.join(dir, routePath, item)).isDirectory() ) {
-          parseFolders(app, dir, `${routePath}${item}/`);
+          parseFolders(app, dir, options, `${routePath}${item}/`);
         } else {
           app.get(routePath + item, (req, res) => {
             res.sendFile(path.join(dir, routePath, item))
