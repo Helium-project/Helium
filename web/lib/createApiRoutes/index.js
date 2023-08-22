@@ -16,7 +16,7 @@ const parseFolders = (app, dir, routePath = '/') => {
 
   readingDir.forEach((item) => {
     switch (item) {
-      case 'index.js':
+      case 'api.js':
         createApi(app, dir, routePath);
         console.log(
           clc.cyanBright('[HELIUM] ') +
@@ -34,7 +34,7 @@ const parseFolders = (app, dir, routePath = '/') => {
 };
 
 const createApi = async (app, dir, routePath = '/') => {
-  const apiRoute = await import(pathToFileURL(path.join(dir, routePath, "index.js")));
+  const apiRoute = await import(pathToFileURL(path.join(dir, routePath, "api.js")));
 
   if (apiRoute.default.type == "GET") {
     app.get("/api" + routePath, (req, res) => {
