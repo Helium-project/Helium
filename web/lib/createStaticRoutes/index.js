@@ -10,6 +10,7 @@ import { formattingRoute, setupTemplate } from '../routeFormatter/index.js';
 */
 
 const createStaticRoutes = (app, dirname, options = {}) => {
+  console.log(dirname);
   const viewsFolder = path.join(dirname, 'views');
   console.log(
     clc.cyanBright('[HELIUM] ') + clc.bgBlackBright('Creating static routers')

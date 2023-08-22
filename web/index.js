@@ -10,6 +10,7 @@ import { buildAll } from './lib/buildAll/index.js';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import watchChanges from './lib/watchChanges/index.js';
+import store from './store/index.js';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const app = express();
@@ -23,19 +24,24 @@ const defaultOptions = {
 
 // Launching the Helium app
 export const startApp = (port, dirname, options = defaultOptions, callbacks) => {
-    // build folder check
+    // Build folder check
     fs.existsSync(path.join(__dirname, '../.build/')) ? fs.rmdirSync(path.join(__dirname, '../.build/'), { force: true, recursive: true }) : undefined;
     fs.mkdirSync(path.join(__dirname, '../.build/'));
+
+    // Global Store Configuration
+    store.setOptions(options);
+    store.setProjectDir(dirname);
+    store.setBuildDir(path.join(__dirname, '../.build/'));
     
     // Starting the Express server
     app.listen(port, () => {
         console.log(clc.cyanBright("[HELIUM] ") + `Launching the Helium application`);
         app.use('/public', express.static(dirname + '/public'));
-        options.useBuild ? buildAll(app, dirname, options) : undefined;
+        options.useBuild ? buildAll(app) : undefined;
         if (options.useBuild) {
-            createStaticRoutes(app, path.join(__dirname, "../.build/"), options);
-            options.spa ? createSinglePageRoutes(app, path.join(__dirname, "../.build/"), options) : undefined;
-            watchChanges(app, dirname, path.join(__dirname, "../.build/"), options);
+            createStaticRoutes(app, store.getBuildDir(), options);
+            options.spa ? createSinglePageRoutes(app, store.getBuildDir(), options) : undefined;
+            watchChanges(app);
         } else {
             createStaticRoutes(app, dirname, options);
             options.spa ? createSinglePageRoutes(app, dirname, options) : undefined;

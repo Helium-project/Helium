@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
+import store from '../../store/index.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -14,7 +15,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 let templateSource = '';
 
-export const formattingRoute = (dir, routePath, options = {}) => {
+export const formattingRoute = (dir, routePath) => {
     const indexFilePath = path.join(dir, routePath, 'index.html');
     const fileSource = fs.readFileSync(indexFilePath);
     const fileSourceText = Buffer.from(fileSource).toString();
@@ -31,7 +32,7 @@ export const formattingRoute = (dir, routePath, options = {}) => {
 
     let pageContent = templateSource;
 
-    options.spa
+    store.getOptions().spa
         ? (pageContent = pageContent.replace(
               '%HEAD%',
               '%HEAD%\n<script type="text/javascript">' + spaSourceText + '</script>'

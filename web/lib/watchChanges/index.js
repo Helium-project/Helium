@@ -3,6 +3,8 @@ import fs from 'fs';
 import path from 'path';
 import clc from 'cli-color';
 import createStaticRoutes from './../createStaticRoutes/index.js';
+import store from '../../store/index.js';
+import { formattingRoute } from '../routeFormatter/index.js';
 
 /*
 
@@ -10,31 +12,25 @@ import createStaticRoutes from './../createStaticRoutes/index.js';
 
 */
 
-const watchChanges = (app, dirname, buildDir, options) => {
-    fs.watch(path.join(dirname), { recursive: true }, (event, filename) => {
+const watchChanges = (app) => {
+    fs.watch(path.join(store.getProjectDir()), { recursive: true }, (event, filename) => {
         switch (event) {
             case 'change':
                 switch (getFileNameFromPath(filename)) {
                     case 'index.js':
                         fileChangedIndexJs(
-                            dirname,
-                            buildDir,
                             event,
                             filename,
-                            options
                         );
                         break;
                     default:
                         if (
-                            fs.lstatSync(path.join(dirname, filename)).isFile()
+                            fs.lstatSync(path.join(store.getProjectDir(), filename)).isFile()
                         ) {
                             fileChanged(
                                 app,
-                                dirname,
-                                buildDir,
                                 event,
                                 filename,
-                                options
                             );
                         }
 
@@ -42,15 +38,15 @@ const watchChanges = (app, dirname, buildDir, options) => {
                 }
                 break;
             case 'rename':
-                fileChanged(app, dirname, buildDir, event, filename, options);
+                fileChanged(app, event, filename);
             default:
                 break;
         }
     });
 };
 
-const fileChangedIndexJs = (dirname, buildDir, event, filename, options) => {
-    options.changeFileLog
+const fileChangedIndexJs = (event, filename) => {
+    store.getOptions().changeFileLog
         ? console.log(
               clc.cyanBright('[HELIUM] ') +
                   `A change in the file has been detected: ` +
@@ -58,8 +54,8 @@ const fileChangedIndexJs = (dirname, buildDir, event, filename, options) => {
           )
         : undefined;
 
-    const filePath = path.join(dirname, filename);
-    const filePathBuild = path.join(buildDir, filename);
+    const filePath = path.join(store.getProjectDir(), filename);
+    const filePathBuild = path.join(store.getBuildDir(), filename);
 
     if (fs.existsSync(filePathBuild)) {
         fs.rmSync(filePathBuild);
@@ -73,7 +69,7 @@ const fileChangedIndexJs = (dirname, buildDir, event, filename, options) => {
         loader: { '.js': 'jsx' },
     });
 
-    options.changeFileLog
+    store.getOptions().changeFileLog
         ? console.log(
               clc.cyanBright('[HELIUM] ') +
                   `file ${clc.yellow(
@@ -83,8 +79,8 @@ const fileChangedIndexJs = (dirname, buildDir, event, filename, options) => {
         : undefined;
 };
 
-const fileChanged = (app, dirname, buildDir, event, filename, options) => {
-    options.changeFileLog
+const fileChanged = (app, event, filename) => {
+    store.getOptions().changeFileLog
         ? console.log(
               clc.cyanBright('[HELIUM] ') +
                   `A change in the file has been detected: ` +
@@ -92,8 +88,8 @@ const fileChanged = (app, dirname, buildDir, event, filename, options) => {
           )
         : undefined;
 
-    const filePath = path.join(dirname, filename);
-    const filePathBuild = path.join(buildDir, filename);
+    const filePath = path.join(store.getProjectDir(), filename);
+    const filePathBuild = path.join(store.getBuildDir(), filename);
 
     if (fs.existsSync(filePathBuild)) {
         fs.rmSync(filePathBuild);
@@ -101,17 +97,17 @@ const fileChanged = (app, dirname, buildDir, event, filename, options) => {
 
     if (fs.existsSync(filePath)) {
         fs.copyFileSync(
-            path.join(dirname, filename),
-            path.join(buildDir, filename)
+            path.join(store.getProjectDir(), filename),
+            path.join(store.getBuildDir(), filename)
         );
     }
 
     app.get(filename.replace(getFileNameFromPath(filename), ''), (req, res) => {
         res.set('Content-Type', 'text/html');
-        res.send(formattingRoute(dir, routePath, options));
+        res.send(formattingRoute(dir, routePath));
     });
 
-    options.changeFileLog
+    store.getOptions().changeFileLog
         ? console.log(
               clc.cyanBright('[HELIUM] ') +
                   `file ${clc.yellow(
