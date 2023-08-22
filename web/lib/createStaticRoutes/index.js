@@ -3,6 +3,12 @@ import fs from 'fs';
 import path from 'path';
 import { formattingRoute, setupTemplate } from '../routeFormatter/index.js';
 
+/*
+
+  Responsible for intuitive routing
+
+*/
+
 const createStaticRoutes = (app, dirname, options = {}) => {
   const viewsFolder = path.join(dirname, 'views');
   console.log(

@@ -3,6 +3,12 @@ import fs from 'fs';
 import path from 'path';
 import { pathToFileURL } from 'url';
 
+/*
+
+    Creates API routes
+
+*/
+
 const createApiRoutes = (app, dirname) => {
   const apiFolder = path.join(dirname, 'api');
   console.log(

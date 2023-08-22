@@ -6,6 +6,12 @@ import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
+/*
+
+    Generating pages from a template
+
+*/
+
 let templateSource = '';
 
 export const formattingRoute = (dir, routePath, options = {}) => {

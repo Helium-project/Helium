@@ -6,6 +6,12 @@ import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
+/*
+
+    Builds the application when useBuild is enabled
+
+*/
+
 export const buildAll = (app, dir, options, routePath = '/') => {
     const readingDir = fs.readdirSync(path.join(dir, routePath));
     const buildDir = path.join(__dirname, '../../../.build');

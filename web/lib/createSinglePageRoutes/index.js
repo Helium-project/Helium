@@ -3,6 +3,12 @@ import fs from 'fs';
 import path from 'path';
 import { formattingRoute } from '../routeFormatter/index.js';
 
+/*
+
+    SPA page generator
+    
+*/
+
 const singlePageContent = {};
 
 const createSinglePageRoutes = (app, dirname, options) => {

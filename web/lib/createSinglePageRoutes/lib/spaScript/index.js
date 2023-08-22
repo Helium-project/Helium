@@ -1,3 +1,7 @@
+/*
+    Script embedded in a ready-made page for SPA logic operation
+*/
+
 let getPages = {};
 
 onload = async () => {

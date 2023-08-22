@@ -9,19 +9,25 @@ import { buildAll } from './lib/buildAll/index.js';
 
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
+import watchChanges from './lib/watchChanges/index.js';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const app = express();
 
+// Standard config
 const defaultOptions = {
-    spa: false,
-    useBuild: true,
+    spa: true, // Single Page Application, it is recommended to use without using third-party libraries such as React
+    useBuild: true, // Each index.js file will be compiled via esbuild, allowing you to create more complex applications
+    changeFileLog: true, // Notify the console about file changes, will only work if useBuild is enabled
 }
 
+// Launching the Helium app
 export const startApp = (port, dirname, options = defaultOptions, callbacks) => {
+    // build folder check
     fs.existsSync(path.join(__dirname, '../.build/')) ? fs.rmdirSync(path.join(__dirname, '../.build/'), { force: true, recursive: true }) : undefined;
     fs.mkdirSync(path.join(__dirname, '../.build/'));
     
+    // Starting the Express server
     app.listen(port, () => {
         console.log(clc.cyanBright("[HELIUM] ") + `Launching the Helium application`);
         app.use('/public', express.static(dirname + '/public'));
@@ -29,6 +35,7 @@ export const startApp = (port, dirname, options = defaultOptions, callbacks) => 
         if (options.useBuild) {
             createStaticRoutes(app, path.join(__dirname, "../.build/"), options);
             options.spa ? createSinglePageRoutes(app, path.join(__dirname, "../.build/"), options) : undefined;
+            watchChanges(app, dirname, path.join(__dirname, "../.build/"), options);
         } else {
             createStaticRoutes(app, dirname, options);
             options.spa ? createSinglePageRoutes(app, dirname, options) : undefined;

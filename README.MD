@@ -38,7 +38,7 @@ A key feature is intuitive routing, you can organize routes as directories, whic
 
 ![structure](./docs/structure.png "Structure")
 
-On the image you can see the project structure followed by **Helium**, you can create exactly the same structure without downloading **helium-create-app**, the main thing is to correctly configure **Helium** connection in your **index.js** file.
+On the image you can see the project structure followed by **Helium**, you can create exactly the same structure without downloading **helium-create-app**, the main thing is to correctly configure **Helium** connection in your **startup.js** file.
 
 ### Structure of the views folder and creation of a new page
 
