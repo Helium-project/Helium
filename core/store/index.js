@@ -1,6 +1,6 @@
 /*
 
-    Global Status Manager 
+    Global State Manager 
 
 */
 
